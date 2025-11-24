@@ -1,76 +1,28 @@
-# --- WARNING - This GitHub Action will no longer be maintained ---
-The owner (dev-drprasad) and maintainer (thadguidry) do not see a need for continuing maintenance because the feature can now be handled directly with a line of code in your workflows with GitHub CLI [delete release](https://cli.github.com/manual/gh_release_delete).
-This repo thus will soon be archived.
-
 # GitHub Action: Delete tag and release
 
-## Usage
-Add following step to your workflow:
+Fork of the original that updates to Node 20.
+
+**Note**: You may be able to skip using this if you are working on a GitHub-hosted runner,
+or you can install the `gh` tool, as `gh` now natively [can delete releases](https://cli.github.com/manual/gh_release_delete).
+For example:
 
 ```yaml
-- uses: dev-drprasad/delete-tag-and-release@v1.1
+      - name: Delete tag
+        run: gh release delete $TAG --cleanup-tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+---
+
+Add the following step to your workflow:
+
+```yaml
+- uses: ClementTsang/delete-tag-and-release@v0.3.1
   with:
-    tag_name: v0.1.2 #(required) - The name of the tag to delete. This is expected to be solely the tag name, not the name of a git reference.
-    delete_release: true #(optional) default: true - also delete all releases and their assets that are associated to the tag name
-    repo: <owner>/<repoName> #(optional) default: repo running this action - the target repository. 
-    github_token: ${{ secrets.GITHUB_TOKEN }} # (required) - a GitHub token with write access to the repo where tags and releases will be searched and deleted
+    delete_release: true # default: false
+    tag_name: v0.1.0 # tag name to delete
+    repo: <owner>/<repoName> # target repo (optional). defaults to repo running this action
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
-
-## Developing
-
-You can follow these instructions to get this project cloned to your local machine and ready for development. Note that
-development requires at least [Node 20](https://nodejs.org/en/download) to be installed on your computer.
-
-```shell
-git clone https://github.com/dev-drprasad/delete-tag-and-release.git
-cd delete-tag-and-release
-npm install
-```
-
-Tests can be run via:
-
-```shell
-npm test
-```
-
-Since this is a repo for a [GitHub Action](https://docs.github.com/en/actions), **every new commit that changes code must include a new bundle.** You can 
-generate a new bundle via running:
-
-```shell
-npm run package
-```
-
-and committing the resulting changes that will be in the `dist/` folder.
-
-### Formatting and linting
-
-This project uses [ESLint](https://eslint.org/) for linting and [Prettier](https://prettier.io/) for source code formatting. You can run the lint checks by running:
-
-```shell
-npm run lint
-```
-
-If you have lint errors that are automatically fixable, you can fix those by running:
-
-```shell
-npm run lint:fix
-```
-
-## Releasing
-
-Releases are done by creating a new tag and pushing that tag to the repo. A new
-release can be made via the following:
-
-```shell
-git checkout master
-git fetch
-git pull
-# choose either patch, minor, or major. See https://docs.npmjs.com/cli/v8/commands/npm-version#description for more info
-npm version <patch/minor/major>
-git push --follow-tags
-```
-
-This will update the version in the `package.json`, create a new commit based off of the master branch, and create a 
-new Git tag with that version that points to the new commit. Remember to use the `--follow-tags` flag when running 
-`git push`! Without it, the new tag won't be pushed.
-

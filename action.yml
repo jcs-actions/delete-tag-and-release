@@ -1,5 +1,5 @@
 name: Delete tag and release - jcs
-description: delete tag and release
+description: An action to delete a tag, and optionally its associated release.
 author: "Shen, Jen-Chieh"
 
 branding:
@@ -8,19 +8,16 @@ branding:
 
 inputs:
   tag_name:
-    description: The name of the tag to delete.
-    required: true
-  github_token:
-    description: A github token that has write access to the repo where the tag is.
+    description: tag name
     required: true
   delete_release:
-    description: Whether to delete all releases that correspond to the provided tag.
+    description: whether to delete release or not
     required: false
-    default: 'true'
+    default: true
   repo:
-    description: target repository as <owner>/<repository>. Defaults to the repo running this action.
+    description: target repository as <owner>/<repository>
     required: false
 
 runs:
-  using: 'node20'
-  main: 'dist/main.js'
+  using: "node20"
+  main: "index.js"
